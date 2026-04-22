@@ -4,9 +4,24 @@ from models import Students, Teachers
 
 routes = Blueprint('routes', __name__)
 
+def verifyTeacher():
+    teacherId = request.headers.get('teacherId')
+    if not teacherId:
+        return None
+    return Teachers.query.filter_by(identityNumber=teacherId).first()
+
 @routes.route('/students', methods=['POST'])
 def addStudent():
+    teacher = verifyTeacher()
+    if not teacher:
+        return jsonify({'message': 'Unauthorized'}), 403
+    
     data = request.get_json()
+
+    if data['classN'] != teacher.classN:
+        return jsonify({'message': 'You can only add students to your class'}), 403
+
+   
     newStudent = Students(
         firstName=data['firstName'],
         lastName=data['lastName'],
@@ -20,6 +35,10 @@ def addStudent():
 
 @routes.route('/teachers', methods=['POST'])
 def addTeacher():
+    teacher = verifyTeacher()
+    if not teacher:
+        return jsonify({'message': 'Unauthorized'}), 403
+
     data = request.get_json()
     newTeacher = Teachers(
         firstName=data['firstName'],
@@ -34,7 +53,12 @@ def addTeacher():
 
 @routes.route('/students', methods=['GET'])
 def getStudents():
+    teacher = verifyTeacher()
+    if not teacher:
+        return jsonify({'message': 'Unauthorized'}), 403
+
     students = Students.query.all()
+
     output = []
     for student in students:
         student_data = {
@@ -49,6 +73,10 @@ def getStudents():
 
 @routes.route('/teachers', methods=['GET'])
 def getTeachers():
+    teacher = verifyTeacher()
+    if not teacher:
+        return jsonify({'message': 'Unauthorized'}), 403
+
     teachers = Teachers.query.all()
     output = []
     for teacher in teachers:
@@ -64,6 +92,10 @@ def getTeachers():
 
 @routes.route('/students/id/<identityNumber>', methods=['GET'])
 def getStudent(identityNumber):
+    teacher = verifyTeacher()
+    if not teacher:
+        return jsonify({'message': 'Unauthorized'}), 403
+
     student = Students.query.filter_by(identityNumber=identityNumber).first()
     if student:
         return jsonify({
@@ -77,6 +109,10 @@ def getStudent(identityNumber):
 
 @routes.route('/teachers/id/<identityNumber>', methods=['GET'])
 def getTeacher(identityNumber):
+    teacher = verifyTeacher()
+    if not teacher:
+        return jsonify({'message': 'Unauthorized'}), 403
+
     teacher = Teachers.query.filter_by(identityNumber=identityNumber).first()
     if teacher:
         return jsonify({
@@ -90,6 +126,12 @@ def getTeacher(identityNumber):
 
 @routes.route('/students/class/<classN>', methods=['GET'])
 def getClassStudents(classN):
+    teacher = verifyTeacher()
+    if not teacher:
+        return jsonify({'message': 'Unauthorized'}), 403
+    if classN != teacher.classN:
+        return jsonify({'message': 'You can only view your own class'}), 403
+
     classStudents = Students.query.filter_by(classN=classN).all()
     output = []
     if classStudents:
