@@ -1,4 +1,4 @@
-from app import db
+from database import db
 
 class Students(db.Model):
     __tablename__ = 'Students'
@@ -7,7 +7,7 @@ class Students(db.Model):
     firstName = db.Column(db.String(20), nullable=False)
     lastName = db.Column(db.String(20), nullable=False)
     identityNumber = db.Column(db.String(9), nullable=False, unique=True)
-    classN = db.Column(db.String(10), nullable=False)
+    classN = db.Column('class', db.String(10), nullable=False)
 
 class Teachers(db.Model):
     __tablename__ = 'Teachers'
@@ -16,7 +16,7 @@ class Teachers(db.Model):
     firstName = db.Column(db.String(20), nullable=False)
     lastName = db.Column(db.String(20), nullable=False)
     identityNumber = db.Column(db.String(9), nullable=False, unique=True)
-    classN = db.Column(db.String(10), nullable=False)
+    classN = db.Column('class', db.String(10), nullable=False)
 
 class Location(db.Model):
     __tablename__ = 'Locations'

@@ -1,4 +1,4 @@
-CREATE DATABASE AnnualTripSystem
+﻿CREATE DATABASE AnnualTripSystem
 
 use AnnualTripSystem
 go
@@ -26,3 +26,10 @@ longitude float not null,
 latitude float not null,
 timeS datetime not null
 )
+
+
+--הכנסתי פה קצת נתונים לשליפות ראשוניות של בדיקת ה-API
+
+INSERT INTO Students VALUES ('Sarah', 'Cohen', '214577555', 'SixthG'), ('Rachel', 'Levi', '345656778', 'ThirdG')
+
+INSERT INTO Teachers VALUES ('Miriam', 'Avrahami', '327587889', 'eighthG'), ('Dina', 'Katz', '216784566', 'SixthG')
