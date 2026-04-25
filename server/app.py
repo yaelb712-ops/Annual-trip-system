@@ -5,7 +5,7 @@ from database import db
 from routes import routes
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins = "*")
 socketio = SocketIO(app, cors_allowed_origins="*")
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     'mssql+pyodbc:///?odbc_connect='
