@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from database import db
-from models import Students, Teachers
+from models import Students, Teachers, Locations
 
 routes = Blueprint('routes', __name__)
 
@@ -144,3 +144,37 @@ def getClassStudents(classN):
             }
             output.append(student_data)
     return jsonify({'students': output})
+
+@routes.route('/Locations', methods=['POST'])
+def newLocation():
+    data = request.get_json()
+    refLo = data['Coordinates']['Longitude']
+    refLa = data['Coordinates']['Latitude']
+
+    decimelLO = float(refLo['Degrees']) + float(refLo['Minutes'])/60 + float(refLo['Seconds'])/3600
+    decimelLA = float(refLa['Degrees']) + float(refLa['Minutes'])/60 + float(refLa['Seconds'])/3600
+
+    locationS = Locations(
+        studentIdentity=str(data['ID']),
+        longitude=decimelLO,
+        latitude=decimelLA,
+        timeS=data['Time']
+    )
+    db.session.add(locationS)
+    db.session.commit()
+    return jsonify({'message': 'location send to parents'}), 201
+
+@routes.route('/Locations', methods=['GET'])
+def getLocations():
+    outpot = []
+    locations = Locations.query.all()
+    for location in locations:
+        location_data= {
+            'studentIdentity': location.studentIdentity,
+            'longitude': location.longitude,
+            'latitude': location.latitude,
+            'timeS': location.timeS
+        }
+        outpot.append(location_data)
+    return jsonify({'Locations': outpot})
+    

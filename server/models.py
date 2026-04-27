@@ -18,7 +18,7 @@ class Teachers(db.Model):
     identityNumber = db.Column(db.String(9), nullable=False, unique=True)
     classN = db.Column('class', db.String(10), nullable=False)
 
-class Location(db.Model):
+class Locations(db.Model):
     __tablename__ = 'Locations'
 
     id = db.Column(db.Integer, primary_key=True)
