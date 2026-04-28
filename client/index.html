@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול טיול שנתי</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+    <div id="loginTeacher">
+        <h1>מערכת ניהול טיול שנתי</h1>
+        <input type="text" id="teacherId" placeholder="הכניסי תעודת זהות">
+        <button onclick="login()">כניסה</button>
+        <p id="loginError" style="color: red; display: none">תעודת זהות לא נמצאה במערכת</p>
+    </div>
+
+<div id="mainSection" style="display: none">
+    
+    <button onclick="showTab('students')">תלמידות</button>
+    <button onclick="showTab('teachers')">מורות</button>
+
+    <div id="studentsTab" style="display:none">
+        <h2>הוספת תלמידה</h2>
+        <form id="studentForm">
+            <input type="text" id="studentFirstName" placeholder="שם פרטי">
+            <input type="text" id="studentLastName" placeholder="שם משפחה">
+            <input type="text" id="studentId" placeholder="תעודת זהות">
+            <input type="text" id="studentClass" placeholder="כיתה">
+            <button type="submit">הוסף תלמידה</button>
+        </form>
+
+        <h2>צפייה</h2>
+        <button onclick="getAllStudents()">כל התלמידות</button>
+        <button onclick="getMyClass()">תלמידות הכיתה שלי</button>
+        <input type="text" id="searchStudentId" placeholder="חפש לפי ת״ז">
+        <button onclick="getStudent()">חפש</button>
+        
+        <div id="studentsResult"></div>
+    </div>
+
+    <div id="teachersTab" style="display:none">
+        <h2>הוספת מורה</h2>
+        <form id="teacherForm">
+            <input type="text" id="teacherFirstName" placeholder="שם פרטי">
+            <input type="text" id="teacherLastName" placeholder="שם משפחה">
+            <input type="text" id="teacherIdentity" placeholder="תעודת זהות">
+            <input type="text" id="teacherClass" placeholder="כיתה">
+            <button type="submit">הוסף מורה</button>
+        </form>
+
+        <h2>צפייה</h2>
+        <button onclick="getAllTeachers()">כל המורות</button>
+        <input type="text" id="searchTeacherId" placeholder="חפש לפי ת״ז">
+        <button onclick="getTeacher()">חפש</button>
+        
+        <div id="teachersResult"></div>
+    </div>
+
+    <button onclick="showTab('map')">מפה</button>
+    <div id="mapTab" style="display: none;">
+        <h2>מיקום התלמידות</h2>
+        <div id="map" style="height: 500px;"></div>
+    </div>
+
+</div>
+
+    <script src="app.js"></script>
+    
+</body>
+</html>
