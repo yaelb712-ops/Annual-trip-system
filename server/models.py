@@ -26,3 +26,12 @@ class Locations(db.Model):
     longitude = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     timeS = db.Column(db.DateTime, nullable=False)
+
+class TeacherLocations(db.Model):
+    __tablename__ = 'TeacherLocations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    teacherIdentity = db.Column(db.String(9), nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    timeS = db.Column(db.DateTime, nullable=False)

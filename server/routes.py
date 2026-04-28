@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from database import db
-from models import Students, Teachers, Locations
+from models import Students, Teachers, Locations, TeacherLocations
 
 routes = Blueprint('routes', __name__)
 
@@ -177,4 +177,35 @@ def getLocations():
         }
         outpot.append(location_data)
     return jsonify({'Locations': outpot})
-    
+
+@routes.route('/teacher-location', methods=['POST'])
+def newTeacherLocation():
+    data = request.get_json()
+    refLo = data['Coordinates']['Longitude']
+    refLa = data['Coordinates']['Latitude']
+
+    decimelLO = float(refLo['Degrees']) + float(refLo['Minutes'])/60 + float(refLo['Seconds'])/3600
+    decimelLA = float(refLa['Degrees']) + float(refLa['Minutes'])/60 + float(refLa['Seconds'])/3600
+
+    locationS = TeacherLocations(
+        teacherIdentity=str(data['ID']),
+        longitude=decimelLO,
+        latitude=decimelLA,
+        timeS=data['Time']
+    )
+    db.session.add(locationS)
+    db.session.commit()
+    return jsonify({'message': 'location send'}), 201
+
+
+@routes.route('/teacher-location', methods=['GET'])
+def getTeacherLocation():
+    location = TeacherLocations.query.order_by(TeacherLocations.id.desc()).first()
+    if location:
+        return jsonify ({
+            'teacherIdentity': location.teacherIdentity,
+            'longitude': location.longitude,
+            'latitude': location.latitude,
+            'timeS': location.timeS
+        })
+    return jsonify({'message': 'no location found'}), 404

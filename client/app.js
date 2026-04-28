@@ -213,3 +213,25 @@ function showTab(tab){
        updateMap() 
     } 
 }
+
+async function checkDistance() {
+    const response = await fetch(`${SERVER}/teacher-location`, {headers: {'teacherId': teacherId}})
+    const data = await response.json()
+    const teacherLatLng = L.latLng(data.latitude, data.longitude)
+
+    let anyFar = false
+    
+    for(const id in markers){
+        const studentLatLng = markers[id].getLatLng()
+        const distance = teacherLatLng.distanceTo(studentLatLng)
+        
+        if(distance > 3000) {
+            alert(`student ${id} is too far away!`)
+            anyFar = true
+        }
+    }
+    
+    if(!anyFar) {
+        alert('all students are close enough!')
+    }
+}
