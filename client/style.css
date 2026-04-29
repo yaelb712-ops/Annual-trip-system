@@ -1,0 +1,110 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f4f8;
+    color: #333;
+    direction: rtl;
+}
+
+h1 {
+    color: #2c5f8a;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+h2 {
+    color: #2c5f8a;
+    margin: 15px 0 10px;
+    font-size: 20px;
+}
+
+/* מסכי כניסה */
+#roleSelect, #loginTeacher, #loginStudent {
+    max-width: 400px;
+    margin: 100px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* כפתורים */
+button {
+    background-color: #2c5f8a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 5px;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #1a4066;
+}
+
+/* שדות קלט */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* תוכן ראשי */
+#mainSection {
+    max-width: 900px;
+    margin: 30px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* תוצאות */
+#studentsResult p, #teachersResult p, #studentsDistanceList p {
+    background: #f0f4f8;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+    border-right: 4px solid #2c5f8a;
+}
+
+/* תצוגת הורה */
+#parentView {
+    max-width: 900px;
+    margin: 30px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* הודעות שגיאה */
+p[style*="color: red"] {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* טפסים */
+form {
+    background: #f0f4f8;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* מפה */
+#map, #parentMap {
+    border-radius: 8px;
+    margin-top: 10px;
+}

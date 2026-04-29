@@ -1,72 +1,95 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת ניהול טיול שנתי</title>
+    <title>Annual Trip System</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
-    <div id="loginTeacher">
-        <h1>מערכת ניהול טיול שנתי</h1>
-        <input type="text" id="teacherId" placeholder="הכניסי תעודת זהות">
-        <button onclick="login()">כניסה</button>
-        <p id="loginError" style="color: red; display: none">תעודת זהות לא נמצאה במערכת</p>
+    <div id="roleSelect">
+        <h1>Annual Trip System</h1>
+        <button onclick="selectRole('teacher')">Login as Teacher</button>
+        <button onclick="selectRole('student')">Login as Student / Parent</button>
+    </div>
+
+    <div id="loginTeacher" style="display: none">
+        <h1>Annual Trip System</h1>
+        <input type="text" id="teacherId" placeholder="Enter ID number">
+        <button onclick="login()">Login</button>
+        <button onclick="goBack('loginTeacher')">Back</button>
+        <p id="loginError" style="color: red; display: none">ID not found in the system</p>
+    </div>
+
+    <div id="loginStudent" style="display: none">
+        <h1>Annual Trip System</h1>
+        <input type="text" id="studentLoginId" placeholder="Enter student ID number">
+        <button onclick="loginStudent()">Login</button>
+        <button onclick="goBack('loginStudent')">Back</button>
+        <p id="loginStudentError" style="color: red; display: none">ID not found in the system</p>
     </div>
 
 <div id="mainSection" style="display: none">
     
-    <button onclick="showTab('students')">תלמידות</button>
-    <button onclick="showTab('teachers')">מורות</button>
+    <button onclick="goBack('mainSection')">Logout</button>
+    <button onclick="showTab('students')">Students</button>
+    <button onclick="showTab('teachers')">Teachers</button>
 
     <div id="studentsTab" style="display:none">
-        <h2>הוספת תלמידה</h2>
+        <h2>Add Student</h2>
         <form id="studentForm">
-            <input type="text" id="studentFirstName" placeholder="שם פרטי">
-            <input type="text" id="studentLastName" placeholder="שם משפחה">
-            <input type="text" id="studentId" placeholder="תעודת זהות">
-            <input type="text" id="studentClass" placeholder="כיתה">
-            <button type="submit">הוסף תלמידה</button>
+            <input type="text" id="studentFirstName" placeholder="First name">
+            <input type="text" id="studentLastName" placeholder="Last name">
+            <input type="text" id="studentId" placeholder="ID number">
+            <button type="submit">Add Student</button>
         </form>
 
-        <h2>צפייה</h2>
-        <button onclick="getAllStudents()">כל התלמידות</button>
-        <button onclick="getMyClass()">תלמידות הכיתה שלי</button>
-        <input type="text" id="searchStudentId" placeholder="חפש לפי ת״ז">
-        <button onclick="getStudent()">חפש</button>
+        <h2>View</h2>
+        <button onclick="getAllStudents()">All Students</button>
+        <button onclick="getMyClass()">My Class Students</button>
+        <input type="text" id="searchStudentId" placeholder="Search by ID">
+        <button onclick="getStudent()">Search</button>
         
         <div id="studentsResult"></div>
     </div>
 
     <div id="teachersTab" style="display:none">
-        <h2>הוספת מורה</h2>
+        <h2>Add Teacher</h2>
         <form id="teacherForm">
-            <input type="text" id="teacherFirstName" placeholder="שם פרטי">
-            <input type="text" id="teacherLastName" placeholder="שם משפחה">
-            <input type="text" id="teacherIdentity" placeholder="תעודת זהות">
-            <input type="text" id="teacherClass" placeholder="כיתה">
-            <button type="submit">הוסף מורה</button>
+            <input type="text" id="teacherFirstName" placeholder="First name">
+            <input type="text" id="teacherLastName" placeholder="Last name">
+            <input type="text" id="teacherIdentity" placeholder="ID number">
+            <input type="text" id="teacherClass" placeholder="Class">
+            <button type="submit">Add Teacher</button>
         </form>
 
-        <h2>צפייה</h2>
-        <button onclick="getAllTeachers()">כל המורות</button>
-        <input type="text" id="searchTeacherId" placeholder="חפש לפי ת״ז">
-        <button onclick="getTeacher()">חפש</button>
+        <h2>View</h2>
+        <button onclick="getAllTeachers()">All Teachers</button>
+        <input type="text" id="searchTeacherId" placeholder="Search by ID">
+        <button onclick="getTeacher()">Search</button>
         
         <div id="teachersResult"></div>
     </div>
 
-    <button onclick="showTab('map')">מפה</button>
+    <button onclick="showTab('map')">Map</button>
     <div id="mapTab" style="display: none;">
-        <h2>מיקום התלמידות</h2>
+        <h2>Students Location</h2>
         <div id="map" style="height: 500px;"></div>
-        <button onclick="checkDistance()">בדקי מרחקי תלמידות</button>
+        <button onclick="checkDistance()">Check Students Distance</button>
+        <div id="studentsDistanceList" style="margin-top: 15px;"></div>
     </div>
 
 </div>
+
+    <div id="parentView" style="display: none">
+        <h2>Students Location</h2>
+        <button onclick="goBack('parentView')">Back</button>
+        <div id="parentMap" style="height: 500px;"></div>
+        <div id="studentInfo" style="margin-top: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 8px;"></div>
+    </div>
 
     <script src="app.js"></script>
     

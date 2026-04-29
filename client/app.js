@@ -3,6 +3,50 @@ const SERVER = 'http://127.0.0.1:5000'
 let teacherId = ''
 let teacherClass = ''
 
+function selectRole(role) {
+    document.getElementById('roleSelect').style.display = 'none'
+    if (role === 'teacher') {
+        document.getElementById('loginTeacher').style.display = 'block'
+    } else {
+        document.getElementById('loginStudent').style.display = 'block'
+    }
+}
+
+function goBack(currentScreen) {
+    document.getElementById(currentScreen).style.display = 'none'
+    if (currentScreen === 'parentView') {
+        parentMap = null
+        parentMarkers = {}
+        document.getElementById('loginStudent').style.display = 'block'
+    } else if (currentScreen === 'mainSection') {
+        teacherId = ''
+        teacherClass = ''
+        document.getElementById('loginTeacher').style.display = 'block'
+    } else {
+        document.getElementById('roleSelect').style.display = 'block'
+    }
+}
+
+async function loginStudent() {
+    const id = document.getElementById('studentLoginId').value
+    const response = await fetch(`${SERVER}/student-view/${id}`)
+    if (response.ok) {
+        const data = await response.json()
+        document.getElementById('loginStudent').style.display = 'none'
+        document.getElementById('parentView').style.display = 'block'
+        initParentMap()
+        await updateParentMap()
+        const inRange = data.inRange ? 'In range' : 'Out of range'
+        document.getElementById('studentInfo').innerHTML = `
+            <p>Name: ${data.firstName} ${data.lastName}</p>
+            <p>ID: ${data.identityNumber}</p>
+            <p>Status: ${inRange}</p>
+        `
+    } else {
+        document.getElementById('loginStudentError').style.display = 'block'
+    }
+}
+
 async function login() {
     teacherId = document.getElementById('teacherId').value
 
@@ -19,12 +63,6 @@ async function login() {
         document.getElementById('loginError').style.display = 'block'
 
     }
-}
-
-function showTab(tab) {
-    document.getElementById('studentsTab').style.display = 'none'
-    document.getElementById('teachersTab').style.display = 'none'
-    document.getElementById(tab + 'Tab').style.display = 'block'
 }
 
 async function getAllStudents() {
@@ -78,7 +116,7 @@ function displayResults(items, containerId) {
     container.innerHTML = ''
     items.forEach(element => {
         container.innerHTML += `
-        <p>${element.firstName} ${element.lastName} |ת"ז: ${element.identityNumber}| כיתה: ${element.classN}`
+        <p>${element.firstName} ${element.lastName} | ID: ${element.identityNumber} | Class: ${element.classN}`
     })
 
 }
@@ -93,20 +131,16 @@ document.getElementById('studentForm').addEventListener('submit', async function
         classN: teacherClass
     }
 
-    if (newStudent.studentFirstName = '') {
+    if (newStudent.firstName === '') {
         alert('insert first name')
         return
     }
-    if (newStudent.studentLastName = '') {
+    if (newStudent.lastName === '') {
         alert('insert last name')
         return
     }
     if (newStudent.identityNumber.length !== 9) {
         alert('identityNumber must be 9 numbers')
-        return
-    }
-    if (newStudent.studentClass = '') {
-        alert('insert class number')
         return
     }
 
@@ -138,11 +172,11 @@ document.getElementById('teacherForm').addEventListener('submit', async function
         classN: document.getElementById('teacherClass').value
     }
 
-    if (newTeacher.firstName = '') {
+   if (newTeacher.firstName === '') {
         alert('insert first name')
         return
     }
-    if (newTeacher.lastName = '') {
+    if (newTeacher.lastName === '') {
         alert('insert last name')
         return
     }
@@ -150,7 +184,7 @@ document.getElementById('teacherForm').addEventListener('submit', async function
         alert('identityNumber must be 9 numbers')
         return
     }
-    if (newTeacher.classN = '') {
+    if (newTeacher.classN === '') {
         alert('insert class number')
         return
     }
@@ -171,6 +205,33 @@ document.getElementById('teacherForm').addEventListener('submit', async function
         alert('error during adding teacher')
     }
 })
+
+let parentMap = null
+let parentMarkers = {}
+
+function initParentMap() {
+    if (parentMap) return
+    parentMap = L.map('parentMap').setView([31.8830, 35.2642], 13)
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(parentMap)
+}
+
+async function updateParentMap() {
+    const response = await fetch(`${SERVER}/Locations`)
+    const data = await response.json()
+    data.Locations.forEach(location => {
+        const lat = location.latitude
+        const lng = location.longitude
+        const id = location.studentIdentity
+        if (parentMarkers[id]) {
+            parentMarkers[id].setLatLng([lat, lng])
+        } else {
+            parentMarkers[id] = L.marker([lat, lng]).addTo(parentMap).bindPopup(id).openPopup()
+        }
+    })
+}
 
 let map = null
 let markers = {}
@@ -219,19 +280,17 @@ async function checkDistance() {
     const data = await response.json()
     const teacherLatLng = L.latLng(data.latitude, data.longitude)
 
-    let anyFar = false
-    
+    const listDiv = document.getElementById('studentsDistanceList')
+    listDiv.innerHTML = ''
+
     for(const id in markers){
         const studentLatLng = markers[id].getLatLng()
         const distance = teacherLatLng.distanceTo(studentLatLng)
-        
-        if(distance > 3000) {
-            alert(`student ${id} is too far away!`)
-            anyFar = true
-        }
-    }
-    
-    if(!anyFar) {
-        alert('all students are close enough!')
+        const inRange = distance <= 3000 ? 'In range' : 'Out of range'
+
+        const studentRes = await fetch(`${SERVER}/students/id/${id}`, {headers: {'teacherId': teacherId}})
+        const studentData = await studentRes.json()
+
+        listDiv.innerHTML += `<p>Name: ${studentData.firstName} ${studentData.lastName} | ID: ${id} | ${inRange}</p>`
     }
 }

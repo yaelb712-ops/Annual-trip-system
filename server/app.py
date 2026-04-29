@@ -2,7 +2,7 @@ from flask import Flask
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from database import db
-from routes import routes
+from routes import student_routes, teacher_routes, location_routes
 
 app = Flask(__name__)
 CORS(app, origins = "*")
@@ -17,7 +17,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 )
 
 db.init_app(app)
-app.register_blueprint(routes)
+app.register_blueprint(student_routes)
+app.register_blueprint(teacher_routes)
+app.register_blueprint(location_routes)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
