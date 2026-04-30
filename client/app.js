@@ -268,6 +268,8 @@ function showTab(tab){
     document.getElementById('studentsTab').style.display = 'none'
     document.getElementById('teachersTab').style.display = 'none'
     document.getElementById('mapTab').style.display = 'none'
+    document.getElementById('studentsDistanceList').style.display = 'none'
+    document.getElementById('studentsDistanceList').innerHTML = ''
     document.getElementById(tab+'Tab').style.display = 'block'
 
     if(tab === 'map'){
@@ -282,6 +284,7 @@ async function checkDistance() {
 
     const listDiv = document.getElementById('studentsDistanceList')
     listDiv.innerHTML = ''
+    listDiv.style.display = 'block'
 
     for(const id in markers){
         const studentLatLng = markers[id].getLatLng()
